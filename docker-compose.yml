@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: server
+    image: binbeacon_api:latest
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+    image: binbeacon_web:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - api
