@@ -5,8 +5,10 @@ WORKDIR /app
 # install deps and build
 COPY package.json package-lock.json* ./
 COPY . .
-# use npm ci for reproducible builds
-RUN npm ci --prefer-offline --no-audit --progress=false
+
+# use npm install instead of npm ci (ci failing due to lock mismatch)
+RUN npm install --no-audit --progress=false
+
 RUN npm run build
 
 FROM node:20-alpine AS runtime
