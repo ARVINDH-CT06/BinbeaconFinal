@@ -7,6 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, ".env") });
 import express, { type Request, Response, NextFunction } from "express";
+import cors from "cors";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import mongoose from "mongoose"; 
@@ -14,6 +15,19 @@ import mongoose from "mongoose";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+// Configure CORS: in production set CORS_ORIGIN to a comma-separated list of allowed origins.
+const corsOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : undefined;
+if (process.env.NODE_ENV === "production") {
+  app.use(
+    cors({
+      origin: corsOrigins ?? true,
+      credentials: true,
+    }),
+  );
+} else {
+  // allow all origins in development for convenience
+  app.use(cors({ origin: true, credentials: true }));
+}
 
 app.use((req, res, next) => {
   const start = Date.now();

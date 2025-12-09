@@ -11,6 +11,18 @@ import { Chat } from "./models/Chat";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   /* ----------------------------------------------------------------
+   * HEALTH CHECK
+   * ---------------------------------------------------------------- */
+  app.get("/api/health", async (_req, res) => {
+    try {
+      // lightweight check — service is alive
+      return res.json({ status: "ok", timestamp: new Date().toISOString() });
+    } catch (err) {
+      return res.status(500).json({ status: "error" });
+    }
+  });
+
+  /* ----------------------------------------------------------------
    * AUTH: REGISTER
    * ---------------------------------------------------------------- */
   app.post("/api/auth/register", async (req, res) => {

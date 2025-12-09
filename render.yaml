@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: binbeacon-api
+    name: binbeacon
     env: docker
     plan: free
     dockerfilePath: Dockerfile.api
@@ -9,10 +9,4 @@ services:
         fromSecret: MONGODB_URI
       - key: NODE_ENV
         value: production
-
-  - type: static
-    name: binbeacon-web
-    env: static
-    plan: free
-    buildCommand: npm ci && npm run build
-    staticPublishPath: dist/public
+    healthCheckPath: /api/health
